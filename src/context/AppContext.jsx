@@ -7,7 +7,8 @@ export const useApp = () => useContext(AppContext);
 
 export const AppProvider = ({ children }) => {
   const [dataLoading, setDataLoading] = useState(false);
-  const [listingsData, setListingsData] = useState([]);
+  const [vehiclesData, setVehiclesData] = useState([]);    // For Cars
+  const [realEstateData, setRealEstateData] = useState([]); // For Houses
   const [usersData, setUsersData] = useState([]);
   const [messagingData, setMessagingData] = useState([]);
 
@@ -20,22 +21,30 @@ export const AppProvider = ({ children }) => {
 
   /** Realtime Listings */
   const loadListingsRealtime = () => {
-    const collectionsList = ["Cars", "Houses"];
-    const unsubscribes = collectionsList.map((name) =>
-      onSnapshot(collection(db, name), (snapshot) => {
-        setListingsData((prev) => {
-          const updated = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            type: name.toLowerCase().slice(0, -1),
-            ...doc.data(),
-          }));
-          const other = prev.filter(
-            (item) => item.type !== name.toLowerCase().slice(0, -1)
-          );
-          return [...other, ...updated];
-        });
-      })
-    );
+    const unsubscribes = [];
+
+    // Subscribe to Cars collection (vehicles)
+    const unsubVehicles = onSnapshot(collection(db, "Cars"), (snapshot) => {
+      const cars = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        type: "vehicle",
+        ...doc.data(),
+      }));
+      setVehiclesData(cars);
+    });
+    unsubscribes.push(unsubVehicles);
+
+    // Subscribe to Houses collection (real estate)
+    const unsubRealEstate = onSnapshot(collection(db, "Houses"), (snapshot) => {
+      const houses = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        type: "realestate",
+        ...doc.data(),
+      }));
+      setRealEstateData(houses);
+    });
+    unsubscribes.push(unsubRealEstate);
+
     return unsubscribes;
   };
 
@@ -66,7 +75,6 @@ export const AppProvider = ({ children }) => {
         const messagesRef = collection(db, "chats", chatDoc.id, "messages");
 
         const unsubMessages = onSnapshot(messagesRef, (messagesSnapshot) => {
-          // Merge messages from all chats in real time
           allMessages = [
             ...allMessages.filter((m) => m.chatId !== chatDoc.id),
             ...messagesSnapshot.docs.map((doc) => ({
@@ -82,7 +90,6 @@ export const AppProvider = ({ children }) => {
       });
     });
 
-    // Return one unsubscribe function that stops both chats and messages listeners
     return () => {
       unsubChats();
       messageUnsubs.forEach((unsub) => unsub && unsub());
@@ -97,16 +104,15 @@ export const AppProvider = ({ children }) => {
     const unsubMessaging = loadMessagingRealtime();
     setDataLoading(false);
 
-    return Array.isArray(unsubListings)
-      ? [...unsubListings, unsubUsers, unsubMessaging]
-      : [unsubListings, unsubUsers, unsubMessaging];
+    return [...unsubListings, unsubUsers, unsubMessaging];
   };
 
   return (
     <AppContext.Provider
       value={{
         dataLoading,
-        listingsData,
+        vehiclesData,
+        realEstateData,
         usersData,
         messagingData,
       }}

@@ -39,10 +39,12 @@ export const getUserAnalytics = (users) => {
 
   const dailyActive = users.filter((u) => {
     const lastActive = toDateObject(u.lastActive);
-    return lastActive &&
+    return (
+      lastActive &&
       lastActive.getDate() === now.getDate() &&
       lastActive.getMonth() === now.getMonth() &&
-      lastActive.getFullYear() === now.getFullYear();
+      lastActive.getFullYear() === now.getFullYear()
+    );
   }).length;
 
   const weeklyActive = users.filter((u) => {
@@ -73,43 +75,39 @@ export const getListingAnalytics = (listings) => {
   if (!Array.isArray(listings)) return {};
 
   const total = listings.length;
-  const cars = listings.filter((item) => item.type?.toLowerCase() === "car");
-  const houses = listings.filter(
-    (item) => item.type?.toLowerCase() === "house"
-  );
+
+  // Separate forSale / forRent for cars and houses
+
   const forRent = listings.filter((item) => item?.rentDuration !== "forSale");
   const forSale = listings.filter((item) => item?.rentDuration === "forSale");
+
   const createdToday = listings.filter((item) => isToday(item.createdAt));
 
   return {
     totalListings: total,
-    cars: cars.length,
-    houses: houses.length,
     forRent: forRent.length,
     forSale: forSale.length,
     createdToday: createdToday.length,
   };
 };
 
-
-//messages data 
+//messages data
 export const getMessagingAnalytics = (messages) => {
   if (!Array.isArray(messages)) return {};
 
   const totalMessages = messages.length;
 
-  const unreadMessages = messages.filter(m => !m.read).length;
+  const unreadMessages = messages.filter((m) => !m.read).length;
 
-  const todayMessages = messages.filter(m => isToday(m.timestamp)).length;
+  const todayMessages = messages.filter((m) => isToday(m.timestamp)).length;
 
   const postMessages = messages.filter(
-    m => m.type?.toLowerCase() === "post"
+    (m) => m.type?.toLowerCase() === "post"
   ).length;
 
   const chatMessages = messages.filter(
-    m => m.type?.toLowerCase() === "message"
+    (m) => m.type?.toLowerCase() === "message"
   ).length;
-
 
   return {
     totalMessages,
