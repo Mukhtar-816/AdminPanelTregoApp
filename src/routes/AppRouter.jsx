@@ -7,7 +7,6 @@ import MessagingOversight from "../pages/MessagingOversight";
 import Login from "../pages/Login";
 import { useAuth } from "../context/AuthContext";
 import PrivateRoute from "./PrivateRoute";
-import { navItems } from "../utils/constants";
 
 const AppRouter = () => {
   const { isAuthenticated } = useAuth();
@@ -25,7 +24,7 @@ const AppRouter = () => {
 
         {/* Protected routes */}
         <Route
-          path={`${navItems[0].href}`}
+          path={"/dashboard"}
           element={
             <PrivateRoute>
               <Dashboard />
@@ -33,7 +32,7 @@ const AppRouter = () => {
           }
         />
         <Route
-          path={`${navItems[1].href}`}
+          path={"/user-management"}
           element={
             <PrivateRoute>
               <UserManagement />
@@ -41,7 +40,7 @@ const AppRouter = () => {
           }
         />
         <Route
-          path={`${navItems[2].href}`}
+          path={`/listing-management`}
           element={
             <PrivateRoute>
               <ListingManagement />
@@ -49,7 +48,7 @@ const AppRouter = () => {
           }
         />
         <Route
-          path={`${navItems[3].href}`}
+          path={"/messaging-oversight"}
           element={
             <PrivateRoute>
               <MessagingOversight />

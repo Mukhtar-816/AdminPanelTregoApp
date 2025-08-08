@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("adminToken");
     if (token) {
       setIsAuthenticated(true);
-      setUser({ email: import.meta.env.VITE_USER_EMAI });
+      setUser({ email: import.meta.env.VITE_USER_EMAIL });
     }
     setAuthLoading(false);
   };
