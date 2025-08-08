@@ -12,7 +12,7 @@ const AppRouter = () => {
   const { isAuthenticated } = useAuth();
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/">
       <Routes>
         {/* Public login route */}
         <Route
