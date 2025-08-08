@@ -1,10 +1,10 @@
 import React from "react";
-import Header from "../components/header";
 import Sidebar from "../components/Sidebar";
 import { AppName, navItems } from "../utils/constants";
 import Loader from "../components/Loader";
 import { useApp } from "../context/AppContext";
 import { useAuth } from "../context/AuthContext";
+import CustomHeader from "../components/CustomHeader";
 
 const CustomLayout = ({ children }) => {
   const { dataLoading } = useApp();
@@ -13,9 +13,9 @@ const CustomLayout = ({ children }) => {
     <div className="flex flex-col h-screen w-screen bg-[#152238] overflow-hidden">
       {/* Fixed Header */}
       <div className="z-50 shrink-0">
-        <Header
+        <CustomHeader
           appName={AppName}
-          adminName={user.email.replace("@admin.com", "")}
+          adminName={user?.email?.replace("@admin.com", "")}
           navItems={navItems}
         />
       </div>

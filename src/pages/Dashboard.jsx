@@ -56,7 +56,7 @@ const Dashboard = () => {
 
   return (
     <CustomLayout>
-      <div className="flex flex-col h-full w-full gap-10 px-6 py-8 overflow-auto">
+      <div className="flex flex-col h-full w-full gap-10 px-6 py-8 overflow-auto ">
         {/* Listing Analytics */}
         <div className="flex flex-col lg:flex-row w-full gap-10 h-full">
           <Card title="Listing Analytics">

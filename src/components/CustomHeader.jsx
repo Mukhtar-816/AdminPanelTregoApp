@@ -6,7 +6,7 @@ import CustomButton from "./CustomButton";
 import Sidebar from "./Sidebar";
 import { useAuth } from "../context/AuthContext";
 
-const Header = ({ ...props }) => {
+const CustomHeader = ({ ...props }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const {logout} = useAuth();
 
@@ -68,4 +68,4 @@ const Header = ({ ...props }) => {
   );
 };
 
-export default Header;
+export default CustomHeader;
